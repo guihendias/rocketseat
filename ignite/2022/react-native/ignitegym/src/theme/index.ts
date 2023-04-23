@@ -20,9 +20,21 @@ export const theme = extendTheme({
       500: "#F75A68",
     },
   },
+  fontConfig: {
+    Roboto: {
+      400: {
+        normal: "Roboto_400Regular",
+        italic: "Roboto_400Regular_Italic",
+      },
+      700: {
+        normal: "Roboto_700Bold",
+        italic: "Roboto_700Bold_Italic",
+      },
+    },
+  },
   fonts: {
-    heading: "Roboto_700Bold",
-    body: "Roboto_400Regular",
+    heading: "Roboto",
+    body: "Roboto",
   },
   fontSizes: {
     xs: 12,
