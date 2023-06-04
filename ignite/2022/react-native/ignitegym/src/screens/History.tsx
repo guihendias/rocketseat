@@ -36,6 +36,7 @@ export function History() {
             Nenhum exercício foi realizado.{"\n"} Vamos fazer exercícios hoje?
           </Text>
         )}
+        showsVerticalScrollIndicator={false}
         px={8}
       />
     </VStack>
