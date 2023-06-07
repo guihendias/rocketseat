@@ -6,7 +6,7 @@ type Props = TouchableOpacityProps & {};
 
 export function ExerciseCard({ ...rest }: Props) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity {...rest}>
       <HStack
         bg="gray.500"
         alignItems="center"
@@ -24,7 +24,7 @@ export function ExerciseCard({ ...rest }: Props) {
           h={16}
           rounded="md"
           mr={4}
-          resizeMode="center"
+          resizeMode="cover"
         />
 
         <VStack flex={1}>
@@ -37,7 +37,12 @@ export function ExerciseCard({ ...rest }: Props) {
           </Text>
         </VStack>
 
-        <Icon as={Entypo} name="chevron-thin-right" ml="auto" color="gray.300" />
+        <Icon
+          as={Entypo}
+          name="chevron-thin-right"
+          ml="auto"
+          color="gray.300"
+        />
       </HStack>
     </TouchableOpacity>
   );
