@@ -5,13 +5,18 @@ import BackgroundImg from "@assets/background.png";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 export function SignUp() {
+  const [name, setName] = useState("");
+
   const navigation = useNavigation();
 
   function handleGoBack() {
     navigation.goBack();
   }
+
+  function handleSignUp() {}
 
   return (
     <ScrollView
@@ -40,7 +45,7 @@ export function SignUp() {
             Crie sua conta
           </Heading>
 
-          <Input placeholder="Nome" />
+          <Input placeholder="Nome" onChangeText={setName} />
 
           <Input
             placeholder="E-mail"
@@ -50,7 +55,9 @@ export function SignUp() {
 
           <Input placeholder="Senha" secureTextEntry />
 
-          <Button title="Criar e acessar" />
+          <Input placeholder="Confirme a Senha" secureTextEntry />
+
+          <Button title="Criar e acessar" onPress={handleSignUp} />
         </Center>
 
         <Center mb={16}>
