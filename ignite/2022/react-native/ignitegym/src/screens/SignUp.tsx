@@ -5,10 +5,28 @@ import BackgroundImg from "@assets/background.png";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
 
 export function SignUp() {
-  const [name, setName] = useState("");
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    },
+  });
 
   const navigation = useNavigation();
 
@@ -16,7 +34,7 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp() {}
+  function handleSignUp(data: FormDataProps) {}
 
   return (
     <ScrollView
@@ -45,19 +63,80 @@ export function SignUp() {
             Crie sua conta
           </Heading>
 
-          <Input placeholder="Nome" onChangeText={setName} />
-
-          <Input
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder="Nome"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="name"
+            rules={{ required: "Informe o nome" }}
+            defaultValue=""
           />
 
-          <Input placeholder="Senha" secureTextEntry />
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="email"
+            rules={{
+              required: "Informe o email",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Informe um email válido",
+              },
+            }}
+            defaultValue=""
+          />
 
-          <Input placeholder="Confirme a Senha" secureTextEntry />
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder="Senha"
+                secureTextEntry
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="password"
+            rules={{ required: true }}
+            defaultValue=""
+          />
 
-          <Button title="Criar e acessar" onPress={handleSignUp} />
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder="Confirme a Senha"
+                secureTextEntry
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="password_confirmation"
+            rules={{ required: true }}
+            defaultValue=""
+          />
+
+          <Button
+            title="Criar e acessar"
+            onPress={handleSubmit(handleSignUp)}
+          />
         </Center>
 
         <Center mb={16}>
