@@ -6,6 +6,8 @@ import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type FormDataProps = {
   name: string;
@@ -14,18 +16,25 @@ type FormDataProps = {
   password_confirmation: string;
 };
 
+const signUpSchema = yup.object({
+  name: yup.string().required("Informe o nome"),
+  email: yup
+    .string()
+    .email("Informe um email válido")
+    .required("Informe o email"),
+  password: yup.string().required("Informe a senha"),
+  password_confirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "As senhas devem ser iguais"),
+});
+
 export function SignUp() {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataProps>({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-    },
+    resolver: yupResolver(signUpSchema),
   });
 
   const navigation = useNavigation();
@@ -71,10 +80,10 @@ export function SignUp() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.name?.message}
               />
             )}
             name="name"
-            rules={{ required: "Informe o nome" }}
             defaultValue=""
           />
 
@@ -88,16 +97,10 @@ export function SignUp() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.email?.message}
               />
             )}
             name="email"
-            rules={{
-              required: "Informe o email",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Informe um email válido",
-              },
-            }}
             defaultValue=""
           />
 
@@ -110,10 +113,10 @@ export function SignUp() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.password?.message}
               />
             )}
             name="password"
-            rules={{ required: true }}
             defaultValue=""
           />
 
@@ -126,6 +129,7 @@ export function SignUp() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.password_confirmation?.message}
               />
             )}
             name="password_confirmation"
