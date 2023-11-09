@@ -1,4 +1,12 @@
-import { Center, Heading, Image, ScrollView, Text, VStack } from "native-base";
+import {
+  Center,
+  Heading,
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+  useToast,
+} from "native-base";
 
 import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
@@ -8,13 +16,10 @@ import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-type FormDataProps = {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-};
+import { api } from "@services/api";
+import axios from "axios";
+import { Alert } from "react-native";
+import { AppError } from "@utils/AppError";
 
 const signUpSchema = yup.object({
   name: yup.string().required("Informe o nome"),
@@ -28,6 +33,8 @@ const signUpSchema = yup.object({
     .oneOf([yup.ref("password"), null], "As senhas devem ser iguais"),
 });
 
+type FormDataProps = yup.InferType<typeof signUpSchema>;
+
 export function SignUp() {
   const {
     control,
@@ -37,13 +44,30 @@ export function SignUp() {
     resolver: yupResolver(signUpSchema),
   });
 
+  const toast = useToast();
+
   const navigation = useNavigation();
 
   function handleGoBack() {
     navigation.goBack();
   }
 
-  function handleSignUp(data: FormDataProps) {}
+  async function handleSignUp(data: FormDataProps) {
+    try {
+      const response = await api.post("/users", data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Ocorreu um erro ao criar a conta";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
+  }
 
   return (
     <ScrollView
